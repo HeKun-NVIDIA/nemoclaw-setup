@@ -4,7 +4,7 @@
 
 而如果你碰巧拥有一台像 **NVIDIA DGX Spark** 这样的顶级桌面 AI 超算，那么将 NemoClaw 与本地大模型结合，将是释放这台机器潜能的最佳方式。
 
-本文将为你提供一个**一键自动部署**的脚本方案，让你轻松在 DGX Spark 上跑起属于自己的 NemoClaw 智能体，并彻底解决 Linux 下 Docker 隔离导致的“LLM request timed out”问题！
+本文将为你提供一个**一键自动部署**的脚本方案，让你轻松在 DGX Spark 上跑起属于自己的 NemoClaw 智能体，并完美适配 Linux 下的 Docker 隔离网络环境！
 
 ---
 
@@ -76,7 +76,7 @@ bash nemoclaw-setup.sh
 
 4. 在 **Step 7** 选择 Policy presets 时，直接回车应用默认的建议配置（通常包含 pypi 和 npm 访问权限）。
 
-脚本会在最后输出如下成功信息，表示网络路由已被成功配置，这解决了原版脚本在 Linux 下容易出现的超时问题：
+脚本会在最后输出如下成功信息，表示网络路由已被成功配置，完美打通了 Sandbox 与宿主机 Ollama 的通信：
 ```text
   Patching gateway inference route...
   ✓ Gateway inference route updated to http://172.17.0.1:11434/v1

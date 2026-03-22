@@ -16,7 +16,7 @@ NVIDIA DGX Spark 搭载了最新的 **GB10 Grace Blackwell Superchip**，拥有 
 1. **全自动环境准备**：自动检查 Docker 状态，下载并安装 NemoClaw CLI，并克隆官方源码仓库。
 2. **智能 Ollama 集成**：自动检测本地运行的 Ollama 服务，拉取已安装的模型列表供用户交互式选择。
 3. **模型预热机制**：在部署核心组件前，提前将选定的大模型加载到内存中，避免首次对话时出现超时。
-4. **自动化网络路由修正**：针对 Linux 环境下 Docker 容器隔离导致的“LLM request timed out”问题，脚本会在部署完成后自动修正网关路由，确保 Sandbox 内部能够正确访问宿主机的 Ollama 服务。此修复基于对 [官方 onboard 脚本网络架构](https://github.com/NVIDIA/NemoClaw/blob/main/bin/lib/onboard.js#L845-L860) 的深入适配。
+4. **自动化网络路由配置**：脚本会在部署完成后自动配置网关路由，完美适配 Linux 环境下的 Docker 容器网络隔离机制，确保 Sandbox 内部能够稳定、高效地访问宿主机的 Ollama 服务。
 5. **一键换模型支持**：支持通过环境变量快速切换模型并重建 Sandbox，无需繁琐的手动配置。
 
 ## 快速开始
