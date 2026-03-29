@@ -1,0 +1,230 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# news-policy.yaml — 新闻资讯抓取 Policy
+# 在 openclaw-sandbox.yaml 基础上追加 AI 资讯、NVIDIA 动态、开发者社区、开源项目域名
+# 使用方法：openshell policy set my-assistant --policy policies/news-policy.yaml
+#
+# 注意：openshell policy set 会替换整个 policy，因此本文件包含完整的 filesystem/process 基础配置
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only:
+    - /usr
+    - /lib
+    - /proc
+    - /dev/urandom
+    - /app
+    - /etc
+    - /var/log
+    - /sandbox/.openclaw
+  read_write:
+    - /sandbox
+    - /tmp
+    - /dev/null
+    - /sandbox/.openclaw-data
+landlock:
+  compatibility: best_effort
+process:
+  run_as_user: sandbox
+  run_as_group: sandbox
+network_policies:
+  # ── NemoClaw 核心：NVIDIA 推理 API ──────────────────────────────────────────
+  nvidia_inference:
+    name: nvidia_inference
+    endpoints:
+      - host: integrate.api.nvidia.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "*", path: "/**" }
+      - host: inference-api.nvidia.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "*", path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/openclaw }
+
+  # ── NemoClaw 核心：GitHub ────────────────────────────────────────────────────
+  github:
+    name: github
+    endpoints:
+      - host: github.com
+        port: 443
+        access: full
+      - host: api.github.com
+        port: 443
+        access: full
+      - host: raw.githubusercontent.com
+        port: 443
+        access: full
+    binaries:
+      - { path: /usr/bin/gh }
+      - { path: /usr/bin/git }
+      - { path: /usr/local/bin/openclaw }
+
+  # ── NVIDIA 官方资讯 ──────────────────────────────────────────────────────────
+  nvidia_news:
+    name: nvidia_news
+    endpoints:
+      - host: blogs.nvidia.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: developer.nvidia.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: nvidianews.nvidia.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: developer-blogs.nvidia.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/openclaw }
+
+  # ── AI 资讯媒体 ──────────────────────────────────────────────────────────────
+  ai_news_media:
+    name: ai_news_media
+    endpoints:
+      - host: theverge.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: techcrunch.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: venturebeat.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: technologyreview.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: arstechnica.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: artificialintelligence-news.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: wired.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/openclaw }
+
+  # ── 开发者社区 ────────────────────────────────────────────────────────────────
+  developer_community:
+    name: developer_community
+    endpoints:
+      - host: news.ycombinator.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: dev.to
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: www.reddit.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: old.reddit.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/openclaw }
+
+  # ── 开源项目与论文 ────────────────────────────────────────────────────────────
+  opensource_research:
+    name: opensource_research
+    endpoints:
+      - host: huggingface.co
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: paperswithcode.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: arxiv.org
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+      - host: export.arxiv.org
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        tls: terminate
+        rules:
+          - allow: { method: "GET", path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/openclaw }
